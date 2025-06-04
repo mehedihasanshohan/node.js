@@ -14,10 +14,12 @@ const users = [
   {id:3, name: "hasan", email: "hasan23@gmail.com"}
 ];
 
+// mhshohan01
+// DnPMDT5gJlntL2eo
 // mongodb
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "mongodb+srv://<db_username>:<db_password>@cluster0.qbdqo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const uri = "mongodb+srv://mhshohan01:DnPMDT5gJlntL2eo@cluster0.uufpspq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -32,15 +34,32 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+
+    // mongodb connection
+    const database = client.db("usersDB");
+    const userCollection = database.collection("users");
+
+    app.post('/users', async(req, res) => {
+      const user = req.body;
+      console.log('new user', user);
+      const result = await userCollection.insertOne(user);
+      res.send(result);
+    });
+
+
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
-    await client.close();
+    // await client.close();
   }
 }
 run().catch(console.dir);
+
+// mongodb
+
 
 // Simple Route
 app.get('/', (req, res) => {
@@ -52,14 +71,14 @@ app.get('/users', (req, res) =>{
 });
 
 // POST route to receive data from frontend
-app.post('/users', (req, res) => {
-  console.log(req.body);
-  console.log('api hitting');
-  const newUser = req.body;
-  newUser.id = users.length +1;
-  users.push(newUser);
-  res.send(newUser);
-})
+// app.post('/users', (req, res) => {
+//   console.log(req.body);
+//   console.log('api hitting');
+//   const newUser = req.body;
+//   newUser.id = users.length +1;
+//   users.push(newUser);
+//   res.send(newUser);
+// })
 
 // Server listen
 app.listen(port, () => {
