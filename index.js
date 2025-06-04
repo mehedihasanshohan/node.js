@@ -14,10 +14,6 @@ const users = [
   {id:3, name: "hasan", email: "hasan23@gmail.com"}
 ];
 
-// mhshohan01
-// DnPMDT5gJlntL2eo
-// mongodb
-
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = "mongodb+srv://mhshohan01:DnPMDT5gJlntL2eo@cluster0.uufpspq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
@@ -39,6 +35,13 @@ async function run() {
     const database = client.db("usersDB");
     const userCollection = database.collection("users");
 
+    // get data
+    app.get('/users', async(req, res) => {
+      const cursor  = userCollection.find()
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
     app.post('/users', async(req, res) => {
       const user = req.body;
       console.log('new user', user);
@@ -56,19 +59,19 @@ async function run() {
     // await client.close();
   }
 }
-run().catch(console.dir);
+run().catch(console.log);
 
 // mongodb
 
 
 // Simple Route
-app.get('/', (req, res) => {
-  res.send('Hello, Express backend is running!');
-});
+// app.get('/', (req, res) => {
+//   res.send('Hello, Express backend is running!');
+// });
 
-app.get('/users', (req, res) =>{
-  res.json(users);
-});
+// app.get('/users', (req, res) =>{
+//   res.json(users);
+// });
 
 // POST route to receive data from frontend
 // app.post('/users', (req, res) => {
