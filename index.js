@@ -40,21 +40,38 @@ async function run() {
       const cursor  = userCollection.find()
       const result = await cursor.toArray();
       res.send(result);
-    })
+    });
 
     app.get('/users/:id', async(req, res) => {
       const id = req.params.id;
       const query = {_id: new ObjectId(id)}
-      const user = await userCollection.findOne(query);
-      res.send(user);
+      const result = await userCollection.findOne(query);
+      res.send(result);
     })
 
     app.post('/users', async(req, res) => {
-      const user = req.body;
-      console.log('new user', user);
-      const result = await userCollection.insertOne(user);
+      const newUser = req.body;
+      console.log('new user', newUser);
+      const result = await userCollection.insertOne(newUser);
       res.send(result);
     });
+
+    app.put('/users/:id', async(req, res) => {
+      const id = req.params.id;
+      const user = req.body;
+      console.log(id, user);
+      const filter = {_id: new ObjectId(id)}
+      const  options = {upsert: true};
+      const updatedDoc = {
+        $set : {
+          name: user.name,
+          email: user.email
+        }
+      }
+
+      const result = await userCollection.updateOne(filter, updatedUser, options);
+      res.send(result);
+    })
 
     app.delete('/users/:id', async(req, res) => {
       const id = req.params.id;
@@ -79,9 +96,9 @@ run().catch(console.log);
 
 
 // Simple Route
-// app.get('/', (req, res) => {
-//   res.send('Hello, Express backend is running!');
-// });
+app.get('/', (req, res) => {
+  res.send('Hello, Express backend is running!');
+});
 
 // app.get('/users', (req, res) =>{
 //   res.json(users);
